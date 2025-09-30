@@ -21,7 +21,6 @@ export function getDB(): sqlite3.Database {
   ensureDataDir();
   db = new sqlite3.Database(DB_PATH);
 
-  // Initialize schema
   db.serialize(() => {
     db!.run(
       `CREATE TABLE IF NOT EXISTS messages (
@@ -40,5 +39,5 @@ export type MessageRow = {
   id: number;
   user_message: string;
   bot_message: string;
-  created_at: string; // ISO datetime string
+  created_at: string;
 };

@@ -1,25 +1,29 @@
+import dotenv from 'dotenv';
+dotenv.config()
+
 import express from 'express';
 import cors from 'cors';
-import morgan from 'morgan';
-import dotenv from 'dotenv';
-import messagesRoutes from './routes/messagesRoutes.js';
-import { getDB } from './db/database.js';
+import http from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import { setupWebSocket } from './ws/socket';
+import messageRoutes from './routes/messageRoutes';
 
-dotenv.config();
-
-// Ensure DB is initialized on app start
-getDB();
 
 const app = express();
+const server = http.createServer(app);
+const io = new SocketIOServer(server, {
+    cors: {
+        origin: '*',
+    },
+});
+
+setupWebSocket(io);
 
 app.use(cors());
 app.use(express.json());
-app.use(morgan('dev'));
+app.use('/messages', messageRoutes);
 
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok' });
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () => {
+    console.log(`Backend rodando na porta ${PORT}`);
 });
-
-app.use('/', messagesRoutes);
-
-export default app;
