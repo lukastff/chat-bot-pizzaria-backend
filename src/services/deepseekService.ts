@@ -8,7 +8,6 @@ const deepseek = axios.create({
     },
 });
 
-console.log('caa', process.env.DEEPSEEK_API_KEY)
 const systemPrompt = `
 Você é um atendente de uma pizzaria com as seguintes regras:
 
